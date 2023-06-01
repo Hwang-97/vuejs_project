@@ -1,12 +1,13 @@
-package org.africalib.gallery.backend.entity;
+package com.africalib.gallery.backend.entity;
 
 import lombok.Getter;
+import javax.persistence.Id;
 
 import javax.persistence.*;
 
 @Getter
 @Entity
-@Table(name = "items")
+@Table(name="items")
 public class Item {
 
     @Id
@@ -19,9 +20,9 @@ public class Item {
     @Column(length = 100)
     private String imgPath;
 
-    @Column
+    @Column(length = 100)
     private int price;
 
-    @Column
+    @Column(length = 100)
     private int discountPer;
 }
