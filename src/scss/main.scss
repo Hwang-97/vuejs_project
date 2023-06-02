@@ -1,3 +1,16 @@
-$color--black: #000;
-$color--white: #fff;
-$color--primary: orange;
+$primary: #49606A;
+@import "../../node_modules/bootstrap/scss/functions";
+
+@import "../../node_modules/bootstrap/scss/variables";
+@import "../../node_modules/bootstrap/scss/mixins";
+$theme-colors: (
+  "primary":    #49606A,
+  "secondary":  red,
+  "success":    $success,
+  "info":       $info,
+  "warning":    $warning,
+  "danger":     $danger,
+  "light":      $light,
+  "dark":       $dark
+);
+@import "../../node_modules/bootstrap/scss/bootstrap";
