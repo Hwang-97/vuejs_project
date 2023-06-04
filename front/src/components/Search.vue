@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <div class="selects w-auto">
-            <select class="form-select">
+            <select class="form-select" v-model="selectedOption">
                 <option
                     v-for="type in types"
                     :key="type"
@@ -24,24 +24,38 @@
 
 <script>
     export default {
+        props:{
+          boardFlag : {
+            typeFlag: Boolean,
+            default: false
+          },
+          list : {
+            typeFlag: Array,
+            default: []
+          }
+        },
         data(){
           return{
               title:'',
-              types:['제목','내용']
+              types:['제목','내용'],
+              selectedOption: '제목'
           }
         },
         methods:{
             searchBoard(){
-                let url = "/board";
-                let emptyInput = this.title.trim().length <= 0 ? false : true;
-                this.$router.replace({
-                    path : emptyInput ? url : "/",
-                    query : {
-                            typeFlag : "제목",
-                            content  : "검색"
-                            } ,
-                });
-
+                if(this.boardFlag){
+                  this.$emit('fnGetList',{typeFlag: this.selectedOption == '제목'? 'title' : 'content' ,content : this.title});
+                }else {
+                  let url = "/board";
+                  let emptyInput = this.title.trim().length <= 0 ? false : true;
+                  this.$router.replace({
+                    path: emptyInput ? url : "/",
+                    query: {
+                      typeFlag: "제목",
+                      content: "검색"
+                    },
+                  });
+                }
             }
         },
         name: "Search"
