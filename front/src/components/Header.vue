@@ -14,10 +14,11 @@
             </div>
         </div>
         <div class="btn-group ml-auto">
-          <div class="btn btn-warning info" @click="openModal">질문</div>
+            <button class="btn btn-outline-success info" @click="openModal">질문</button>
         </div>
     </header>
-    <Modal v-show="showModal" @close="closeModal">
+
+    <Modal title="My Modal" ref="modal" v-show="showModal" @close="closeModal">
     </Modal>
 </template>
 

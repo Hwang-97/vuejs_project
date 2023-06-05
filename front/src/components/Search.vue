@@ -26,11 +26,11 @@
     export default {
         props:{
           boardFlag : {
-            typeFlag: Boolean,
+            flag: Boolean,
             default: false
           },
           list : {
-            typeFlag: Array,
+            flag: Array,
             default: []
           }
         },
@@ -44,16 +44,16 @@
         methods:{
             searchBoard(){
                 if(this.boardFlag){
-                  this.$emit('fnGetList',{typeFlag: this.selectedOption == '제목'? 'title' : 'content' ,content : this.title});
+                  this.$emit('search:fnGetList',{typeFlag: this.selectedOption == '제목'? 'title' : 'content' ,content : this.title});
                 }else {
-                  let url = "/board";
+                  let url = "board";
                   let emptyInput = this.title.trim().length <= 0 ? false : true;
                   if(emptyInput) {
-                      this.$router.replace({
-                          path: url,
-                          query: {
-                              typeFlag: "제목",
-                              content: "검색"
+                      this.$router.push({
+                          name: url,
+                          params: {
+                              typeFlag: this.selectedOption == '제목'? 'title' : 'content',
+                              content : this.title
                           },
                       });
                   }else{

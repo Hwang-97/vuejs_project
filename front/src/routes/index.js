@@ -15,10 +15,13 @@ export default createRouter({
         {
             path: "/board",
             component:BoardLay,
+            props: true,
             children:[
                 {
                     path: "",
-                    component: Board
+                    name: "board",
+                    component: Board,
+                    props: true
                 },
                 {
                     path: "detail",

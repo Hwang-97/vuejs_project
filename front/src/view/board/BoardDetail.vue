@@ -7,26 +7,30 @@
                         상세화면
                     </div>
                     <div class="card-body">
-                        <table class="table mt-4">
+                        <table class="table mt-3">
                             <tbody>
                             <tr>
-                                <th scope="row">제목</th>
+                                <th scope="row" class="col-1 text-center">제목</th>
                                 <td>
                                     <input v-model="detail.title" :disabled="!isEditMode"/>
                                 </td>
                             </tr>
                             <tr>
-                                <th scope="row">작성자</th>
+                                <th scope="row" class="col-1 text-center">작성자</th>
                                 <td>
                                     <input v-model="detail.author" :disabled="!isEditMode"/>
                                 </td>
                             </tr>
                             <tr>
-                                <th scope="row" v-text="isEditMode?'수정일자':'작성일자'"></th>
+                                <th scope="row"
+                                    v-text="isEditMode?'수정일자':'작성일자'"
+                                    class="col-1 text-center"></th>
                                 <td>{{ detail.createdAt.substr(0, 10) }}</td>
                             </tr>
                             <tr>
-                                <th scope="row">내용</th>
+                                <th scope="row"
+                                    class="col-1 text-center">
+                                    내용</th>
                                 <td>
                                     <textarea v-model="detail.content" :disabled="!isEditMode"></textarea>
                                 </td>
@@ -35,14 +39,17 @@
                         </table>
                     </div>
                     <div class="card-footer">
-                        <button class="btn btn-primary" @click="toggleEditMode()">
+                        <button class="btn btn-primary" @click="list">
+                            목록
+                        </button>
+                        <button class="btn"
+                                @click="toggleEditMode()"
+                                :class="isEditMode?'btn-warning':'btn-primary'">
                             {{ isEditMode ? '저장' : '수정' }}
                         </button>
-                        <button
-                                class="btn btn-danger"
-                                @click="delete"
-                                v-if="detail.isDeletable"
-                        >
+                        <button class="btn btn-danger"
+                                @click="del"
+                                v-if="detail.isDeletable">
                             삭제
                         </button>
                     </div>
@@ -57,7 +64,7 @@
     export default {
         props: {
             id: {
-                typeFlag: String,
+                flag: String,
                 default: '',
             },
         },
@@ -75,7 +82,18 @@
             };
         },
         methods: {
-            delete() {
+            list(){
+                if(this.isEditMode){
+                    if(confirm("수정중이던 내용을 저장하시겠습니까?")){
+                        this.toggleEditMode()
+                    }
+                }
+                this.loadList();
+            },
+            del() {
+                if(confirm("해당 내용을 삭제하시겠습니까?")){
+                    this.loadList();
+                }
             },
             toggleEditMode() {
                 if (this.isEditMode) {
@@ -86,6 +104,16 @@
                 }
                 this.isEditMode = !this.isEditMode;
             },
+            loadList(){
+                let url = "/board";
+                this.$router.replace({
+                      path: url,
+                      query: {
+                          typeFlag: "",
+                          content: ""
+                      },
+                  });
+            }
         },
     };
 </script>

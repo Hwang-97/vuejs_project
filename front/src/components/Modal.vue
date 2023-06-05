@@ -1,74 +1,118 @@
 <template>
-  <div class="modal">
-    <div class="modal-content">
-      <div class="container my-3">
-          <!-- 질문 -->
-          <h2 class="border-bottom py-2"></h2>
-          <div class="card my-3">
-              <div class="card-body">
-                  <div class="card-text" style="white-space: pre-line;"></div>
-                  <div class="d-flex justify-content-end">
-                      <div class="badge bg-light text-dark p-2">
-
-                      </div>
-                  </div>
-              </div>
-          </div>
-          <!-- 답변 목록 -->
-          <h5 class="border-bottom my-3 py-2">개의 답변이 있습니다.</h5>
-          <div class="card my-3">
-              <div class="card-body">
-                  <div class="card-text" style="white-space: pre-line;"></div>
-                  <div class="d-flex justify-content-end">
-                      <div class="badge bg-light text-dark p-2">
-
-                      </div>
-                  </div>
-              </div>
-          </div>
-          <!-- 답변 등록 -->
-          <form action="" method="post" class="my-3">
-              <div class="mb-3">
-                  <textarea name="content" id="content" class="form-control" rows="10"></textarea>
-              </div>
-              <input type="submit" value="답변등록" class="btn btn-primary">
-          </form>
+  <div class="modal" :class="{ 'show': showModal }">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">{{ title }}</h5>
+          <button type="button" class="close" @click="closeModal">
+            <span>&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <slot></slot>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" @click="closeModal">Close</button>
+          <button type="button" class="btn btn-primary" @click="saveModal">Save</button>
+        </div>
       </div>
     </div>
-    <div class="modal-overlay" @click=""></div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'Modal'
+  name: 'Modal',
+  props: {
+    title: {
+      type: String,
+      required: true
+    }
+  },
+  data() {
+    return {
+      showModal: false
+    };
+  },
+  methods: {
+    openModal() {
+      this.showModal = true;
+    },
+    closeModal() {
+      this.showModal = false;
+    },
+    saveModal() {
+      // Perform save action
+      this.closeModal();
+    }
+  }
 };
 </script>
 
-<style>
-/* 모달 스타일링 */
+<style scoped>
 .modal {
+  display: none;
   position: fixed;
-  top: 0;
+  z-index: 1050;
   left: 0;
+  top: 0;
   width: 100%;
   height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  overflow: hidden;
+  outline: 0;
+}
+
+.modal.show {
+  display: block;
+}
+
+.modal-dialog {
+  position: relative;
+  width: auto;
+  margin: 0.5rem;
+  pointer-events: none;
 }
 
 .modal-content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  pointer-events: auto;
   background-color: #fff;
-  padding: 20px;
+  background-clip: padding-box;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 0.3rem;
+  outline: 0;
 }
 
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+.modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 1rem;
+  border-bottom: 1px solid #dee2e6;
+  border-top-left-radius: 0.3rem;
+  border-top-right-radius: 0.3rem;
+}
+
+.modal-title {
+  margin-bottom: 0;
+}
+
+.modal-body {
+  flex: 1 1 auto;
+  padding: 1rem;
+  overflow: auto;
+}
+
+.modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0.75rem;
+  border-top: 1px solid #dee2e6;
+  border-bottom-right-radius: 0.3rem;
+  border-bottom-left-radius: 0.3rem;
 }
 </style>
