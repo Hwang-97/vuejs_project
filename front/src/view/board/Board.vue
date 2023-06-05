@@ -27,7 +27,7 @@
                 <tbody>
                 <tr v-for="(row, idx) in list"
                     :key="idx"
-                    @click="fnView(`${row.idx}`)">
+                    @click="fnView(`${row.id}`)">
                     <td>{{ row.id }}</td>
                     <td>{{ row.title }}</td>
                     <td>{{ row.author }}</td>
@@ -46,18 +46,13 @@
             </table>
         </div>
     </div>
-  <div v-show="showModal">
-  <Modal/>
-  </div>
 </template>
 
 <script>
-    import Search from "../components/Search.vue";
-    import Modal from "../components/Modal.vue";
+    import Search from "../../components/Search.vue";
     import axios from "axios";
     export default {
         components:{
-          Modal,
             Search
         },
         props:{
@@ -72,7 +67,6 @@
         },
         data() { //변수생성
             return {
-                showModal: false,
                 requestBody: {}, //리스트 페이지 데이터전송
                 list: {}, //리스트 데이터
                 no: '', //게시판 숫자처리
@@ -107,21 +101,52 @@
         methods: {
             deleteRow(id){
               console.log(id);
-              this.showModal = !this.showModal;
             },
-            fnView(idx){
-                this.showModal = !this.showModal;
+            fnView(id){
+                const url = "/board/detail"
+                this.$router.replace({
+                     path: url,
+                     query: {
+                         id: id
+                     },
+                 });
             },
             fnGetList(data) {
-              axios.get("/api/boardList", {
-                params: data
-              }).then((res)=>{
-                if(res.statusText == "OK"){
-                  this.list = res.data;
-                }else{
-                  this.alert = true;
-                }
-              });
+              // axios.get("/api/boardList", {
+              //   params: data
+              // }).then((res)=>{
+              //   if(res.statusText == "OK"){
+              //     this.list = res.data;
+              //   }else{
+              //     this.alert = true;
+              //   }
+              // });
+                this.list = [
+                        {
+                            id : "1",
+                            title : "제목",
+                            author : "테스터",
+                            content : "테스트 중 입니다.....",
+                            createdAt : "2023-06-02 10:35:12",
+                            isDeletable : false
+                        },
+                        {
+                            id : "2",
+                            title : "제목",
+                            author : "테스터",
+                            content : "테스트 중 입니다.....",
+                            createdAt : "2023-06-02 10:35:12",
+                            isDeletable : false
+                        },
+                        {
+                            id : "3",
+                            title : "제목",
+                            author : "테스터",
+                            content : "테스트 중 입니다.....",
+                            createdAt : "2023-06-02 10:35:12",
+                            isDeletable : false
+                        },
+                    ]
             }
         },
         name: "Board"

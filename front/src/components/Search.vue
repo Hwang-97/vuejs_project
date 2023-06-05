@@ -48,13 +48,17 @@
                 }else {
                   let url = "/board";
                   let emptyInput = this.title.trim().length <= 0 ? false : true;
-                  this.$router.replace({
-                    path: emptyInput ? url : "/",
-                    query: {
-                      typeFlag: "제목",
-                      content: "검색"
-                    },
-                  });
+                  if(emptyInput) {
+                      this.$router.replace({
+                          path: url,
+                          query: {
+                              typeFlag: "제목",
+                              content: "검색"
+                          },
+                      });
+                  }else{
+                      alert("검색어 입력")
+                  }
                 }
             }
         },

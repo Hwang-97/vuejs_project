@@ -1,7 +1,9 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import Home from "../view/Home.vue"
 import Etc from "../view/Etc.vue"
-import Board from "../view/Board.vue"
+import Board from "../view/board/Board.vue"
+import BoardDetail from "../view/board/BoardDetail";
+import BoardLay from "../layout/BoardLay";
 
 export default createRouter({
     history:createWebHashHistory(),
@@ -12,11 +14,22 @@ export default createRouter({
         },
         {
             path: "/board",
-            component:Board
+            component:BoardLay,
+            children:[
+                {
+                    path: "",
+                    component: Board
+                },
+                {
+                    path: "detail",
+                    component: BoardDetail
+                }
+            ]
         },
         {
             path: "/etc",
             component:Etc
         },
+
     ]
 })

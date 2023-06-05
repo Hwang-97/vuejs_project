@@ -13,17 +13,25 @@
                 </RouterLink>
             </div>
         </div>
+        <div class="btn-group ml-auto">
+          <div class="btn btn-warning info" @click="openModal">질문</div>
+        </div>
     </header>
+    <Modal v-show="showModal" @close="closeModal">
+    </Modal>
 </template>
 
 <script>
+    import Modal from "./Modal"
     import Logo from "./Logo"
     export default {
         components:{
-            Logo
+            Logo,
+            Modal
         },
         data(){
             return{
+                showModal: false,
                 navigations:[
                     {
                         name: "Home",
@@ -40,6 +48,14 @@
                 ]
             }
         },
+        methods:{
+            openModal() {
+              this.showModal = true; // 모달을 열기 위해 상태를 true로 설정합니다.
+            },
+            closeModal() {
+              this.showModal = false; // 모달을 닫기 위해 상태를 false로 설정합니다.
+            },
+        },
         name: "Header"
     }
 </script>
@@ -52,5 +68,12 @@
         .logo{
             margin-right: 40px;
         }
+    }
+    .info {
+      margin-left: auto;
+    }
+
+    .ml-auto {
+      margin-left: 1000px;
     }
 </style>
