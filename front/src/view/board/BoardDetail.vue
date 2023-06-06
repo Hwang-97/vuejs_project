@@ -1,4 +1,5 @@
 <template>
+  <h1>tets{{id}}??</h1>
     <div class="container">
         <div class="row">
             <div class="col-12">
@@ -64,10 +65,10 @@
     export default {
         props: {
             id: {
-                flag: String,
-                default: '',
-            },
-        },
+              type: String,
+              default: ''
+            }
+          },
         data() {
             return {
                 detail: {
@@ -81,7 +82,10 @@
                 isEditMode: false,
             };
         },
-        methods: {
+        mounted() {
+          console.log(this.$route.params);
+        },
+      methods: {
             list(){
                 if(this.isEditMode){
                     if(confirm("수정중이던 내용을 저장하시겠습니까?")){

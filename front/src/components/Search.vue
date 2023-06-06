@@ -13,6 +13,7 @@
                 v-model="title"
                 type="text"
                 placeholder="제목 또는 내용을 입력해 주세요."
+                @input = "this.title = $event.target.value"
                 @keydown.enter="searchBoard"/>
         <input
             class="btn btn-primary w-auto"
@@ -51,7 +52,7 @@
                   if(emptyInput) {
                       this.$router.push({
                           name: url,
-                          params: {
+                          query: {
                               typeFlag: this.selectedOption == '제목'? 'title' : 'content',
                               content : this.title
                           },
