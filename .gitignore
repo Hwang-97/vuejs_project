@@ -3,4 +3,4 @@
 .DS_Store/
 node_modules/
 dist/
-*.jasypt-encryptor-password
+pw.jasyptpw
