@@ -3,3 +3,5 @@
 .DS_Store/
 node_modules/
 dist/
+# 확장자가 .a인 파일 무시
+# *.jasypt-encryptor-password
