@@ -1,19 +1,20 @@
 <template>
     <div class="container">
         <div class="selects w-auto">
-            <select class="form-select" v-model="selectedOption">
+            <select class="form-select" :value="selectedOption" @change="changeSelect($event)">
                 <option
-                    v-for="type in types"
-                    :key="type"
-                    >{{type}}</option>
+                    v-for="obj in types"
+                    :key="obj.value"
+                    :value="obj.value"
+                    >{{obj.text}}</option>
             </select>
         </div>
         <input
                 class="form-control w-75"
-                v-model="searchText"
+                :value="searchText"
                 type="text"
                 placeholder="제목 또는 내용을 입력해 주세요."
-                @input = "this.searchText = $event.target.value"
+                @input="changeInput($event)"
                 @keydown.enter="searchBoard"/>
         <input
             class="btn btn-primary w-auto"
@@ -24,55 +25,43 @@
 </template>
 
 <script>
-    import store from '../store';
     export default {
         props:{
           boardFlag : {
             flag: Boolean,
             default: false
           },
-          list : {
-            flag: Array,
-            default: []
-          }
         },
         data(){
           return{
+              types:[{value : "title"  , text :'제목'}
+                    ,{value : "content", text :'내용'}],
               searchText: "",
-              types:['제목','내용'],
-              selectedOption: "",
-              storeData:{}
+              selectedOption: ""
           }
         },
         computed:{
             searchText(){
-                let searchText = this.$store.state.search.searchText;
-                return searchText == "" ? "" : searchText;
+                let searchText = this.$store.getters["search/getSearchText"];
+                return searchText;
             },
             selectedOption(){
-                let flag = this.$store.state.search.flag;
-                return flag == "" ? "제목" : flag;
+                let flag = this.$store.getters['search/getTypeFlag']; // getter 호출
+                return flag;
             }
         },
         methods:{
+            changeInput(e){
+                this.$store.commit('search/setSearchText',e.target.value);
+            },
+            changeSelect(e){
+                this.$store.commit('search/setTypeFlag',e.target.value);
+            },
             searchBoard(){
-                // this.$store.commit('search/setData', { flag: 'newFlag', context: 'newContext' });
                 if(this.boardFlag){
-                  this.$emit('search:fnGetList',{typeFlag: this.selectedOption == '제목'? 'title' : 'content' ,searchText : this.searchText});
+                  this.$emit('search:fnGetList');
                 }else {
-                  let url = "board";
-                  let emptyInput = this.searchText.trim().length <= 0 ? false : true;
-                  if(emptyInput) {
-                      this.$router.push({
-                          name: url,
-                          query: {
-                              typeFlag: this.selectedOption == '제목'? 'title' : 'content',
-                              searchText : this.searchText
-                          },
-                      });
-                  }else{
-                      alert("검색어 입력")
-                  }
+                  this.$router.push({name: "board"});
                 }
             }
         },

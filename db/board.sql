@@ -1,3 +1,6 @@
+DROP TABLE board_detail;
+DROP TABLE board;
+
 -- board 테이블 생성
 CREATE TABLE board (
   id INT AUTO_INCREMENT PRIMARY KEY,
@@ -8,26 +11,48 @@ CREATE TABLE board (
   is_deletable BOOLEAN NOT NULL DEFAULT true
 );
 
--- 더미 데이터 삽입
-INSERT INTO board (title, author, content, created_at, is_deletable)
-VALUES
-  ('첫 번째 게시물', '작성자1', '첫 번째 게시물의 내용입니다.', '2023-05-01 10:00:00', true),
-  ('두 번째 게시물', '작성자2', '두 번째 게시물의 내용입니다.', '2023-05-02 11:30:00', true),
-  ('세 번째 게시물', '작성자3', '세 번째 게시물의 내용입니다.', '2023-05-03 14:15:00', true),
-  ('네 번째 게시물', '작성자4', '네 번째 게시물의 내용입니다.', '2023-05-04 16:45:00', false),
-  ('다섯 번째 게시물', '작성자5', '다섯 번째 게시물의 내용입니다.', '2023-05-05 09:20:00', true);
-
 -- boardDetail 테이블 생성
-CREATE TABLE boardDetail (
-  id INT PRIMARY KEY,
-  detail_text TEXT NOT NULL
+CREATE TABLE board_detail (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  detail_text TEXT NOT NULL,
+  FOREIGN KEY (id)
+	REFERENCES board(id) ON UPDATE CASCADE
 );
 
--- 더미 데이터 삽입
-INSERT INTO boardDetail (id, detail_text)
-VALUES
-  (1, '첫 번째 게시물의 상세 내용입니다.'),
-  (2, '두 번째 게시물의 상세 내용입니다.'),
-  (3, '세 번째 게시물의 상세 내용입니다.'),
-  (4, '네 번째 게시물의 상세 내용입니다.'),
-  (5, '다섯 번째 게시물의 상세 내용입니다.');
+-- board 테이블에 더미 데이터 삽입
+INSERT INTO board (title, author, content, created_at, is_deletable)
+SELECT 
+  CONCAT('Title', id) AS title,
+  CONCAT('Author', id) AS author,
+  CONCAT('Content', id) AS content,
+  ( TIMESTAMPADD(
+    SECOND,
+    FLOOR(RAND() * TIMESTAMPDIFF(SECOND, '2022-01-01', DATE_FORMAT(now(), '%Y%m%d%H%i%s'))),
+    '2022-01-01'
+  )) AS created_at,
+  CASE WHEN RAND() < 0.5 THEN true ELSE false END AS is_deletable
+FROM
+  (SELECT (a.n + (b.n * 10) + (c.n * 100) + 1) AS id
+  FROM 
+    (SELECT 0 AS n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) AS a,
+    (SELECT 0 AS n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) AS b,
+    (SELECT 0 AS n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) AS c
+  ) AS numbers
+LIMIT 100;
+
+-- board_detail 테이블에 더미 데이터 삽입
+INSERT INTO board_detail (id, detail_text)
+SELECT 
+  board.id AS id,
+  CONCAT('Detail text for board id ', board.id) AS detail_text
+FROM
+  board;
+
+  
+-- 조회
+select * from board;
+select * from board_detail;
+
+-- tranjection 처리
+commit;
+rollback;

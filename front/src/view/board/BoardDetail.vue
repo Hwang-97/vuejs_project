@@ -31,7 +31,7 @@
                                 <th scope="row"
                                     v-text="isEditMode?'수정일자':'작성일자'"
                                     class="col-1 text-center"></th>
-                                <td>{{ detail.createdAt.substr(0, 10) }}</td>
+                                <td>{{ detail.createAt.substr(0, 10) }}</td>
                             </tr>
                             <tr>
                                 <th scope="row"
@@ -75,11 +75,11 @@
             return {
                 detail: {
                     id: "",
-                    title: '제목',
-                    author: '테스터',
-                    content: '테스트 중 입니다.....',
-                    createdAt: '2023-06-02 10:35:12',
-                    isDeletable: true,
+                    title: "",
+                    author: "",
+                    content: "",
+                    createAt: "",
+                    isDeletable: null,
                 },
                 isEditMode: false,
             };
@@ -90,11 +90,12 @@
         },
         methods: {
             getDetailData() {
-                axios.get("/api/boardDetail", {
+                axios.get("/api/board/detail", {
                     params: {"id" : this.detail.id}
                 }).then((res) => {
                     if (res.statusText == "OK") {
-                        this.list = res.data;
+                        this.detail = Object.assign(this.detail, res.data);
+                        console.log(this.detail);
                     } else {
                         alert("데이터가 존재하지 않습니다. 리스트 화면으로 돌아갑니다.");
                         this.loadList();
@@ -112,7 +113,17 @@
             },
             del() {
                 if (confirm("해당 내용을 삭제하시겠습니까?")) {
-                    this.loadList();
+                    axios.delete("/api/board", {
+                        params: {"id" : this.detail.id}
+                    }).then((res) => {
+                        if (res.statusText == "OK") {
+                            alert("정상적으로 삭제되었습니다.")
+                            this.loadList();
+                        } else {
+                            alert("삭제할 데이터가 존재하지 않습니다.\r\n리스트 화면으로 돌아갑니다.");
+                            this.loadList();
+                        }
+                    });
                 }
             },
             toggleEditMode() {

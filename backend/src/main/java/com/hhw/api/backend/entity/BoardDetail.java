@@ -1,8 +1,11 @@
 package com.hhw.api.backend.entity;
 
+import lombok.Data;
+
 import javax.persistence.*;
 
 @Entity
+@Data
 @Table(name = "boardDetail")
 public class BoardDetail {
     @Id

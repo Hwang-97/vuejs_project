@@ -46,8 +46,8 @@
       </table>
     </div>
     <pagination
-        :current-page="currentPage"
-        :total-pages="totalPages"
+        :current-page="pageData.currentPage"
+        :total-pages="pageData.totalPages"
         @update:current-page="setCurrentPage"
     ></pagination>
   </div>
@@ -63,45 +63,37 @@ export default {
     Pagination,
     Search
   },
-  props: {
-    typeFlag: {
-      type: String,
-      default: ""
-    },
-    content: {
-      type: String,
-      default: ""
-    }
-  },
-  created() {
-    console.log(this.$route.params.typeFlag);
-    console.log(this.$route.params.content);
-  },
   data() { //변수생성
     return {
-      currentPage: 1,
-      totalPages: 1,
       list: {}, //리스트 데이터
+      pageData:{
+        currentPage: 1,
+        totalPages: 10,
+        countData:10
+      }
     }
   },
   mounted() {
-    const typeFlag = this.$route.params.typeFlag;
-    const content = this.$route.params.content;
-
-    if (typeFlag == "" && content == "") {
-      this.fnGetList()
-    } else {
-      this.fnGetList({typeFlag: typeFlag, content: content})
-    }
+    this.fnGetList()
   },
   methods: {
     setCurrentPage(page) {
-      this.currentPage = page;
-      // Perform any data fetching or updating based on the new page
+      this.pageData.currentPage = page;
+      this.fnGetList()
     },
     deleteRow(id) {
       if (confirm("해당 내용을 삭제하시겠습니까?")) {
-
+        axios.delete("/api/board", {
+          params: {"id" : id}
+        }).then((res) => {
+          if (res.statusText == "OK") {
+            alert("정상적으로 삭제되었습니다.")
+            this.fnGetList()
+          } else {
+            alert("삭제할 데이터가 존재하지 않습니다.\r\n리스트 화면으로 돌아갑니다.");
+            this.fnGetList()
+          }
+        });
       }
     },
     fnView(id) {
@@ -113,8 +105,13 @@ export default {
         },
       });
     },
-    fnGetList(data) {
-      axios.get("/api/boardList", {
+    fnGetList() {
+      let data = {
+        typeFlag    : this.$store.getters["search/getTypeFlag"],
+        searchText  : this.$store.getters["search/getSearchText"]
+      }
+      data = Object.assign(data,this.pageData);
+      axios.get("/api/board", {
         params: data
       }).then((res) => {
         if (res.statusText == "OK") {

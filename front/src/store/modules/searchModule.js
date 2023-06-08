@@ -1,29 +1,29 @@
+// modules/searchModule.js
 const namespaced = true;
-const state= {
-    flag : "",
-    searchText : ""
+const state = {
+    typeFlag: "title",
+    searchText: ""
 };
 const getters = {
-    getSearchData(stat){
-        return {
-            flag : stat.flag,
-            searchText : stat.searchText,
-        }
+    getTypeFlag(state) {
+        return state.typeFlag;
+    },
+    getSearchText(state) {
+        return state.searchText;
     }
 };
 const mutations = {
-    setData(state,data){
-        state.flag = data.flag;
-        state.searchText = data.searchText;
+    setTypeFlag(state,data) {
+        state.typeFlag = data
     },
-    resetData(state){
-        state.flag = "";
-        state.searchText = "";
+    setSearchText(state,data) {
+        state.searchText = data
     }
 };
+
 export default {
     namespaced,
     state,
-    mutations,
-    getters
+    getters,
+    mutations
 };
