@@ -1,6 +1,4 @@
 <template>
-  {{ $route.params.typeFlag }}
-  {{ $route.params.content }}
   <Search
       :board-flag="true"
       @search:fnGetList="fnGetList">
@@ -10,7 +8,7 @@
       <table class="table table-striped ">
         <colgroup>
           <col width="100px"/>
-          <col width="100px"/>
+          <col width="150px"/>
           <col width="100px"/>
           <col width="*"/>
           <col width="200px"/>
@@ -110,13 +108,12 @@ export default {
       const url = "/board/detail"
       this.$router.push({
         path: url,
-        params: {
+        query: {
           id: id
         },
       });
     },
     fnGetList(data) {
-      console.log(data)
       axios.get("/api/boardList", {
         params: data
       }).then((res) => {

@@ -4,9 +4,11 @@ import Etc from "../view/Etc.vue"
 import Board from "../view/board/Board.vue"
 import BoardDetail from "../view/board/BoardDetail";
 import BoardLay from "../layout/BoardLay";
+import beforeEach from "./beforeEach";
 
 export default createRouter({
     history:createWebHashHistory(),
+    beforeEach : beforeEach,
     routes: [
         {
             path: "/",
@@ -23,7 +25,7 @@ export default createRouter({
                 },
                 {
                     path: "detail",
-                    component: BoardDetail
+                    component: BoardDetail,
                 }
             ]
         },

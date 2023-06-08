@@ -6,7 +6,7 @@ import javax.persistence.*;
 @Table(name = "boardDetail")
 public class BoardDetail {
     @Id
-    private Integer id;
+    private String id;
 
     @Column(name = "detail_text")
     private String detailText;

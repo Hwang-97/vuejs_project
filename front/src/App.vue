@@ -7,6 +7,7 @@
 <script>
   import Header from "~/components/Header";
   import Footer from "./components/Footer";
+  import { mapMutations } from 'vuex';
   export default {
     components:{
       Footer,

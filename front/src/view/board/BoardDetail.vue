@@ -1,5 +1,4 @@
 <template>
-  <h1>tets{{id}}??</h1>
     <div class="container">
         <div class="row">
             <div class="col-12">
@@ -10,6 +9,12 @@
                     <div class="card-body">
                         <table class="table mt-3">
                             <tbody>
+                            <tr>
+                                <th scope="row" class="col-1 text-center">게시글 ID</th>
+                                <td>
+                                    {{detail.id}}
+                                </td>
+                            </tr>
                             <tr>
                                 <th scope="row" class="col-1 text-center">제목</th>
                                 <td>
@@ -31,7 +36,8 @@
                             <tr>
                                 <th scope="row"
                                     class="col-1 text-center">
-                                    내용</th>
+                                    내용
+                                </th>
                                 <td>
                                     <textarea v-model="detail.content" :disabled="!isEditMode"></textarea>
                                 </td>
@@ -62,17 +68,13 @@
 
 <script>
 
+    import axios from "axios";
+
     export default {
-        props: {
-            id: {
-              type: String,
-              default: ''
-            }
-          },
         data() {
             return {
                 detail: {
-                    id: '1',
+                    id: "",
                     title: '제목',
                     author: '테스터',
                     content: '테스트 중 입니다.....',
@@ -83,43 +85,59 @@
             };
         },
         mounted() {
-          console.log(this.$route.params);
+            this.detail.id = this.$route.query.id;
+            this.getDetailData();
         },
-      methods: {
-            list(){
-                if(this.isEditMode){
-                    if(confirm("수정중이던 내용을 저장하시겠습니까?")){
+        methods: {
+            getDetailData() {
+                axios.get("/api/boardDetail", {
+                    params: {"id" : this.detail.id}
+                }).then((res) => {
+                    if (res.statusText == "OK") {
+                        this.list = res.data;
+                    } else {
+                        alert("데이터가 존재하지 않습니다. 리스트 화면으로 돌아갑니다.");
+                        this.loadList();
+                    }
+                });
+            },
+
+            list() {
+                if (this.isEditMode) {
+                    if (confirm("수정중이던 내용을 저장하시겠습니까?")) {
                         this.toggleEditMode()
                     }
                 }
                 this.loadList();
             },
             del() {
-                if(confirm("해당 내용을 삭제하시겠습니까?")){
+                if (confirm("해당 내용을 삭제하시겠습니까?")) {
                     this.loadList();
                 }
             },
             toggleEditMode() {
                 if (this.isEditMode) {
-                    var today =  this.$utils.getNow();
+                    var today = this.$utils.getNow();
                     this.detail.createdAt = today.toString()
                     // 저장 로직 구현
                     alert('저장되었습니다.');
                 }
                 this.isEditMode = !this.isEditMode;
             },
-            loadList(){
+            loadList() {
                 let url = "/board";
                 this.$router.replace({
-                      path: url,
-                      query: {
-                          typeFlag: "",
-                          content: ""
-                      },
-                  });
+                    path: url,
+                    query: {
+                        typeFlag: "",
+                        content: ""
+                    },
+                });
             }
-        },
-    };
+        }
+        ,
+    }
+    ;
 </script>
 
 <style lang="scss" scoped>
