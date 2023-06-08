@@ -1,5 +1,5 @@
 <template>
-  <nav>
+  <nav class="pagination-container">
     <ul class="pagination justify-content-center">
       <li class="page-item" :class="{ disabled: currentPage === 1 }">
         <a class="page-link" href="#" @click.prevent="previousPage">Previous</a>
@@ -53,5 +53,10 @@ export default {
 </script>
 
 <style scoped>
-/* Add your custom styles here if needed */
+  .pagination-container {
+    position: fixed;
+    left: 0;
+    bottom: 100px;
+    width: 100%;
+  }
 </style>

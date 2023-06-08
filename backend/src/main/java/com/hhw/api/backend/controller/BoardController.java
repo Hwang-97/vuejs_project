@@ -5,14 +5,18 @@ import com.hhw.api.backend.entity.BoardDetail;
 import com.hhw.api.backend.repository.BoardDetailRepository;
 import com.hhw.api.backend.repository.BoardRepository;
 import com.hhw.api.backend.util.Log;
+import com.hhw.api.backend.util.PageRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.security.core.parameters.P;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -26,21 +30,18 @@ public class BoardController {
     BoardDetailRepository boardDetailRepository;
 
     @GetMapping("")
-    public List<Board> getBoardList(@RequestParam(required = false) String typeFlag,
+    public List<Object> getBoardList(@RequestParam(required = false) String typeFlag,
                                     @RequestParam(required = false) String searchText,
-                                    @RequestParam(required = false) int currentPage,
-                                    @RequestParam(required = false) int countData) {
-        log.info("getBoardList - typeFlag: {}, content: {}", typeFlag, searchText);
-        List<Board> boardList = new ArrayList<Board>();
-        if(searchText == null){
-            boardList = boardRepository.findAll();
-        }else {
-            if (typeFlag.equals("title")) {
-                boardList = boardRepository.findByTitleContaining(searchText);
-            } else if (typeFlag.equals("content")) {
-                boardList = boardRepository.findByContentContaining(searchText);
-            }
+                                    Pageable pageable) {
+        List<Object> boardList = new ArrayList<>();
+        int tot = boardRepository.getTotalElements();
+        if (typeFlag.equals("title")) {
+            boardList = boardRepository.findByTitleContaining(searchText, pageable);
+        } else if (typeFlag.equals("content")) {
+            boardList = boardRepository.findByContentContaining(searchText, pageable);
         }
+        boardList.add(0,tot);
+
         return boardList;
     }
 

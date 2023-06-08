@@ -18,4 +18,5 @@ public class Board {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
     @Column(name = "is_deletable")
-    private Boolean isDeletable = true;}
+    private Boolean isDeletable = true;
+}

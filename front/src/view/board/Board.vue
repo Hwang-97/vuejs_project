@@ -27,7 +27,8 @@
         <tbody>
         <tr v-for="(row, idx) in list"
             :key="idx"
-            @click="fnView(`${row.id}`)">
+            @click="fnView(`${row.id}`)"
+            height="40px">
           <td>{{ row.id }}</td>
           <td>{{ row.title }}</td>
           <td>{{ row.author }}</td>
@@ -37,7 +38,7 @@
             <div
                 @click.stop="deleteRow(`${row.id}`)"
                 v-if="row.isDeletable"
-                class="btn btn-primary">
+                class="btn btn-primary btn-xs">
               삭제
             </div>
           </td>
@@ -46,8 +47,8 @@
       </table>
     </div>
     <pagination
-        :current-page="pageData.currentPage"
-        :total-pages="pageData.totalPages"
+        :current-page="pageData.page"
+        :total-pages="pageData.totPage"
         @update:current-page="setCurrentPage"
     ></pagination>
   </div>
@@ -67,9 +68,10 @@ export default {
     return {
       list: {}, //리스트 데이터
       pageData:{
-        currentPage: 1,
-        totalPages: 10,
-        countData:10
+        page: 1,
+        size: 10,
+        totPage: 1,
+        sort :"id,ASC",
       }
     }
   },
@@ -78,7 +80,7 @@ export default {
   },
   methods: {
     setCurrentPage(page) {
-      this.pageData.currentPage = page;
+      this.pageData.page = page;
       this.fnGetList()
     },
     deleteRow(id) {
@@ -115,7 +117,10 @@ export default {
         params: data
       }).then((res) => {
         if (res.statusText == "OK") {
-          this.list = res.data;
+          let tmpSize = Number(res.data[0]);
+          tmpSize = Math.ceil(tmpSize/10);
+          this.pageData.totPage = tmpSize;
+          this.list = res.data.slice(1);
         } else {
           alert("데이터가 존재하지 않습니다.");
         }
@@ -141,6 +146,7 @@ th {
 tbody {
   tr:hover {
     cursor: pointer;
+
   }
 }
 </style>
