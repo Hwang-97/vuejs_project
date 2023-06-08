@@ -10,13 +10,15 @@ import java.util.List;
 public interface BoardRepository extends JpaRepository<Board, Integer> {
     List<Object> findByTitleContaining(String keyword, Pageable pageable);
 
+    @Query( value = "SELECT COUNT(*) AS TOT FROM board WHERE title like ?1", nativeQuery = true )
+    Integer findByTitleCount(String keyword);
+
     List<Object> findByContentContaining(String keyword, Pageable pageable);
+    @Query( value = "SELECT COUNT(*) AS TOT FROM board WHERE content like ?1", nativeQuery = true )
+    Integer findByContentCount(String keyword);
 
     @Query( value = "SELECT * FROM board WHERE ID = ?1", nativeQuery = true )
     Board findByIdContaining(String id);
-
-    @Query( value = "SELECT COUNT(*) AS TOT FROM board", nativeQuery = true )
-    Integer getTotalElements();
 
     void deleteById(String id);
 }

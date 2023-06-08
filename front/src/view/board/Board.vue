@@ -47,6 +47,7 @@
       </table>
     </div>
     <pagination
+        :key="pageData.totPage"
         :current-page="pageData.page"
         :total-pages="pageData.totPage"
         @update:current-page="setCurrentPage"

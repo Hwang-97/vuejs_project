@@ -34,11 +34,15 @@ public class BoardController {
                                     @RequestParam(required = false) String searchText,
                                     Pageable pageable) {
         List<Object> boardList = new ArrayList<>();
-        int tot = boardRepository.getTotalElements();
+        int tot = 1;
         if (typeFlag.equals("title")) {
             boardList = boardRepository.findByTitleContaining(searchText, pageable);
+            tot = boardRepository.findByTitleCount("%"+searchText+"%");
+            log.info("tot : {}",tot);
         } else if (typeFlag.equals("content")) {
             boardList = boardRepository.findByContentContaining(searchText, pageable);
+            tot = boardRepository.findByContentCount("%"+searchText+"%");
+            log.info("tot : {}",tot);
         }
         boardList.add(0,tot);
 
