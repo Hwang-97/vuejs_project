@@ -42,6 +42,20 @@
                                     <textarea v-model="detail.content" :disabled="!isEditMode"></textarea>
                                 </td>
                             </tr>
+                            <tr>
+                                <th scope="row"
+                                    class="col-1 text-center">
+                                    게시글 삭제
+                                </th>
+                                <select class="form-select" v-model="detail.isDeletable" :disabled="!isEditMode">
+                                  <option :value=true>
+                                    삭제 가능
+                                  </option>
+                                  <option :value=false>
+                                    삭제 불가
+                                  </option>
+                                </select>
+                            </tr>
                             </tbody>
                         </table>
                     </div>
@@ -128,22 +142,29 @@
             },
             toggleEditMode() {
                 if (this.isEditMode) {
-                    var today = this.$utils.getNow();
-                    this.detail.createdAt = today.toString()
-                    // 저장 로직 구현
-                    alert('저장되었습니다.');
+                    // 공통 스크립트 구현 예시를 위한 코드
+                    // var today = this.$utils.getNow();
+                    // this.detail.createAt = today.toString()
+                    this.saveCallAxios();
                 }
                 this.isEditMode = !this.isEditMode;
             },
             loadList() {
-                let url = "/board";
-                this.$router.replace({
-                    path: url,
-                    query: {
-                        typeFlag: "",
-                        content: ""
-                    },
-                });
+                this.$router.replace({path: "/board"});
+            },
+            saveCallAxios(){
+              let data = this.detail;
+              axios.post("/api/board/update", data, {
+                headers: {
+                  "Content-Type": "application/json"
+                }
+              }).then((res)=>{
+                if (res.statusText == "OK") {
+                  alert('저장되었습니다.');
+                }else{
+                  alert("저장중 오류 발생");
+                }
+              });
             }
         }
         ,

@@ -13,9 +13,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/board")
@@ -47,7 +46,7 @@ public class BoardController {
     }
 
     @GetMapping("/detail")
-    public HashMap<String , Object> boardDetail(@RequestParam(required = false) String id) {
+    public HashMap<String , Object> boardDetail(@RequestParam(required = true) String id) {
         log.info("boardDetail - id : {}", id);
         BoardDetail detail = new BoardDetail();
         Board board = new Board();
@@ -68,7 +67,7 @@ public class BoardController {
 
     @Transactional(rollbackFor = Exception.class)
     @DeleteMapping("")
-    public void deleteBoard(@RequestParam(required = false) String id){
+    public void deleteBoard(@RequestParam(required = true) String id){
         HashMap<String , Object> resultMap = new HashMap<String , Object>();
         try {
             if (id != null) {
@@ -77,6 +76,36 @@ public class BoardController {
             }
         }catch(Exception e){
             throw e;
+        }
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @PostMapping("/update")
+    public void updateBoard(@RequestBody Map<String, Object> data) throws Exception {
+        String author = (String) data.get("author");
+        String content = (String) data.get("content");
+        String createAt = (String) data.get("createAt");
+        String id = (String) data.get("id");
+        Boolean isDeletable = (Boolean) data.get("isDeletable");
+        String title = (String) data.get("title");
+        Optional<Board> optionalBoard = boardRepository.findById(id);
+        Optional<BoardDetail> optionalBoardDetail = boardDetailRepository.findById(id);
+        if(optionalBoard.isPresent() && optionalBoardDetail.isPresent()){
+            Board board = optionalBoard.get();
+            BoardDetail boardDetail = optionalBoardDetail.get();
+
+            board.setAuthor(author);
+            board.setTitle(title);
+            board.setIsDeletable(isDeletable);
+            board.setContent(content);
+            board.setCreatedAt(LocalDateTime.now());
+
+            boardDetail.setDetailText(content);
+
+            boardRepository.save(board);
+            boardDetailRepository.save(boardDetail);
+        }else{
+            throw new Exception();
         }
     }
 }
