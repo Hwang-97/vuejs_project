@@ -5,18 +5,15 @@ import com.hhw.api.backend.entity.BoardDetail;
 import com.hhw.api.backend.repository.BoardDetailRepository;
 import com.hhw.api.backend.repository.BoardRepository;
 import com.hhw.api.backend.util.Log;
-import com.hhw.api.backend.util.PageRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.security.core.parameters.P;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
