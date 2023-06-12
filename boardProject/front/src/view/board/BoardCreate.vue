@@ -4,7 +4,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        상세화면
+                        게시글 작성
                     </div>
                     <div class="card-body">
                         <table class="table mt-3">
@@ -12,7 +12,7 @@
                             <tr>
                                 <th scope="row" class="col-1 text-center">게시글 ID</th>
                                 <td>
-                                    {{detail.id}}
+                                    ID는 저장시 자동생성 됩니다.
                                 </td>
                             </tr>
                             <tr>
@@ -29,8 +29,7 @@
                             </tr>
                             <tr>
                                 <th scope="row"
-                                    v-text="isEditMode?'수정일자':'작성일자'"
-                                    class="col-1 text-center"></th>
+                                    class="col-1 text-center">작성일자</th>
                                 <td>{{ detail.createAt.substr(0, 10) }}</td>
                             </tr>
                             <tr>
@@ -68,11 +67,6 @@
                                 :class="isEditMode?'btn-warning':'btn-primary'">
                             {{ isEditMode ? '저장' : '수정' }}
                         </button>
-                        <button class="btn btn-danger"
-                                @click="del"
-                                v-if="detail.isDeletable">
-                            삭제
-                        </button>
                     </div>
                 </div>
             </div>
@@ -93,14 +87,15 @@
                     author: "",
                     content: "",
                     createAt: "",
-                    isDeletable: null,
+                    isDeletable: true,
                 },
-                isEditMode: false,
+                isEditMode: true,
             };
         },
         mounted() {
-            this.detail.id = this.$route.query.id;
-            this.getDetailData();
+            this.detail.createAt = this.$utils.getNow();
+            // this.detail.id = this.$route.query.id;
+            // this.getDetailData();
         },
         methods: {
             getDetailData() {
@@ -125,22 +120,6 @@
                         this.loadList();
                     }
                 }
-                this.loadList();
-            },
-            del() {
-                if (confirm("해당 내용을 삭제하시겠습니까?")) {
-                    axios.delete("/api/board", {
-                        params: {"id" : this.detail.id}
-                    }).then((res) => {
-                        if (res.statusText == "OK") {
-                            alert("정상적으로 삭제되었습니다.")
-                            this.loadList();
-                        } else {
-                            alert("삭제할 데이터가 존재하지 않습니다.\r\n리스트 화면으로 돌아갑니다.");
-                            this.loadList();
-                        }
-                    });
-                }
             },
             toggleEditMode() {
                 if (this.isEditMode) {
@@ -149,20 +128,20 @@
                     // this.detail.createAt = today.toString()
                     this.saveCallAxios();
                 }
-                this.isEditMode = !this.isEditMode;
             },
             loadList() {
                 this.$router.replace({path: "/board"});
             },
             saveCallAxios(){
               let data = this.detail;
-              axios.post("/api/board/update", data, {
+              axios.post("/api/board/create", data, {
                 headers: {
                   "Content-Type": "application/json"
                 }
               }).then((res)=>{
                 if (res.statusText == "OK") {
                   alert('저장되었습니다.');
+                  this.loadList();
                 }else{
                   alert("저장중 오류 발생");
                 }

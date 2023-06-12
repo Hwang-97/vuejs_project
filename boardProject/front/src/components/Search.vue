@@ -25,6 +25,8 @@
 </template>
 
 <script>
+    import { createNamespacedHelpers } from 'vuex'
+    const searchHelper = createNamespacedHelpers('search');
     export default {
         props:{
           boardFlag : {
@@ -41,6 +43,11 @@
           }
         },
         computed:{
+            // ...searchHelper.mapGetters({
+            //     searchText : state => state.searchText,
+            //     flag       : state => state.typeFlag
+            // }),
+            // 하위는 helper를 사용하지 않은 기존 방식
             searchText(){
                 let searchText = this.$store.getters["search/getSearchText"];
                 return searchText;
@@ -51,8 +58,12 @@
             }
         },
         methods:{
+            // ...searchHelper.mapMutations({
+            //     changeInput: 'setSearchText'
+            // }),
             changeInput(e){
                 this.$store.commit('search/setSearchText',e.target.value);
+                return e.target.value;
             },
             changeSelect(e){
                 this.$store.commit('search/setTypeFlag',e.target.value);

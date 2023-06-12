@@ -23,4 +23,7 @@ public interface BoardRepository extends JpaRepository<Board, Integer> {
     Board findByIdContaining(String id);
 
     void deleteById(String id);
+
+    @Query( value = "SELECT MAX(id)+1 FROM board", nativeQuery = true)
+    String getLastId();
 }

@@ -108,4 +108,33 @@ public class BoardController {
             throw new Exception();
         }
     }
+
+    @Transactional(rollbackFor = Exception.class)
+    @PostMapping("/create")
+    public void createBoard(@RequestBody Map<String, Object> data) throws Exception {
+        String id = boardRepository.getLastId();
+        String author = (String) data.get("author");
+        String content = (String) data.get("content");
+        Boolean isDeletable = (Boolean) data.get("isDeletable");
+        String title = (String) data.get("title");
+        if(data != null){
+            Board board = new Board();
+            BoardDetail boardDetail = new BoardDetail();
+
+            board.setId(id);
+            board.setAuthor(author);
+            board.setTitle(title);
+            board.setIsDeletable(isDeletable);
+            board.setContent(content);
+            board.setCreatedAt(LocalDateTime.now());
+
+            boardDetail.setId(id);
+            boardDetail.setDetailText(content);
+
+            boardRepository.save(board);
+            boardDetailRepository.save(boardDetail);
+        }else{
+            throw new Exception();
+        }
+    }
 }
