@@ -35,8 +35,8 @@
                             </tr>
                             <tr>
                                 <th scope="row"
-                                    class="col-1 text-center">
-                                    내용
+                                    class="col-1 text-center align-middle">
+                                    세부 내용
                                 </th>
                                 <td>
                                     <textarea v-model="detail.content" :disabled="!isEditMode"></textarea>
@@ -181,7 +181,6 @@
             margin-left: 5px;
         }
     }
-
     input,
     textarea {
         width: 100%;
