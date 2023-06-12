@@ -45,6 +45,7 @@
         </tr>
         </tbody>
       </table>
+      <div class="btn btn-primary float-right" @click="create">게시글 작성</div>
     </div>
     <pagination
         :key="pageData.totPage"
@@ -87,6 +88,10 @@ export default {
     //     // 변경된 순서를 처리하는 로직을 구현합니다.
     //     // 예: API 호출로 서버에 변경된 순서를 저장합니다.
     //   });
+    create(){
+      const url = "/board/create"
+      this.$router.push(url);
+    },
     setCurrentPage(page) {
       this.pageData.page = page;
       this.fnGetList(true)
